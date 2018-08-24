@@ -152,6 +152,9 @@ def start_burp_scan(api_url, url):
     if not test_api_connection(api_url):
         return False
     api_scan_url = api_url.strip('/') + '/scan'
+    
+    # Automatically sets the scope to the URL. This prevents the scanner
+    # to scan out of the scope of the URL you are providing.
     data = {
         "scope": {
             "include": [{"rule": url, "type":"SimpleScopeDef"}]
@@ -164,7 +167,8 @@ def start_burp_scan(api_url, url):
         else:
             resp = requests.post(api_scan_url, json=data)
     except Exception as e:
-        print(e)
+        if args.debug:
+            print(e)
         return False
     if resp.status_code == 201:
         scan_id = resp.headers.get('location')
