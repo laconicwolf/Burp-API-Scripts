@@ -23,13 +23,8 @@ try:
     import queue
 except ImportError:
     import Queue as queue
-try:
-    from urlparse import urlparse
-except ModuleNotFoundError:
-    from urllib.parse import urlparse
 
 # Third party modules
-
 try:
     import requests
     from requests.packages.urllib3.exceptions import InsecureRequestWarning
