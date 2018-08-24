@@ -344,8 +344,7 @@ if __name__ == '__main__':
             if sys.version.startswith('2'):
                 parser.print_help()
                 print(
-                    "\n[-] CIDR notation not supported when runnng this script \
-                    with Python2. For CIDR notation, please use Python3.\n")
+                    "\n[-] CIDR notation not supported when runnng this script with Python2. For CIDR notation, please use Python3.\n")
                 exit()
             try:
                 if not re.findall(cidr_regex, args.range):
