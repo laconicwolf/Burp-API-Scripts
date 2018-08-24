@@ -35,6 +35,43 @@ except ImportError as error:
     exit()
 
 
+def banner():
+    """Returns ascii art I modified from: http://www.ascii-art.de/ascii/s/starwars.txt
+    and https://www.asciiart.eu/movies/star-wars. I basically put Luke's head on Darth
+    Maul's body and made the lightsaber."""
+    ascii_art = '''                    
+                                 .......        
+                                ::::::;;::.     
+                              .::;::::;::::.    
+      | `                    .::::::::::::::    
+    `     /                  ::`_```_```;:::.   
+   _  |-\\                    ::=-) :=-`  ::::   
+      \\  .  `              `::|  / :     `:::   
+    `  .  \\  /               '|  `~'     ;:::   
+      _ \\  .                  :-:==-.   / :'    
+         .  \\  `              `. _    .'.:    
+       `  \\  .  /           _.   |         ._   
+         _ .  \\            /  `-              `-.
+            \\  .  `      _/  `. \\  \\  :  `.  `.;\\                    
+          `  .  \\  /   _/ \\  \\ `-._  /|  `  ._/  \\                   
+            _ \\  .    / `. `. `.   /  :    ) \\    |                   
+               .  \\   `;._.  \\  _.'/   \\ .' .';   /                   
+             `  \\  .  /     .'`._.* /    .-' (   /                   
+               _ .  \\'`._  /    ; .' .-'   ;    /                     
+                  \\ ;.`._.:     |(    ._   '   /                     
+                   ._.\\   ;     ; `.-'        |                     
+                     \\ \\ / .-'./ .'  \\ .     /:                     
+                     |\\ \\.'  \\ `-.   .\\ *--*' ;\\                    
+                     ;.' `. \\ `.    /` `.    /  .                   
+                    /.L-'\\_: L__..-*     \\   ".  \\   
+
+                     B u r p  S c a n w a l k e r
+
+                  "The Burp is strong with this one"
+'''
+    return ascii_art
+
+
 def ip_range(input_string):
     """Accepts a dash specified range and returns a list of ip addresses
     within that range. Adapted from:
@@ -357,6 +394,10 @@ if __name__ == '__main__':
                 print('[-] {}\n'.format(error))
                 exit()
         urls = generate_web_addresses(addrs)
+        
+    print(banner())
+    print('By: {}'.format(__author__))
+    print(__description__)
 
     if len(urls) == 1:
         print('\n[*] Loaded {} URL...\n'.format(len(urls)))
