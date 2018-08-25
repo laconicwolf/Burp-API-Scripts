@@ -1,5 +1,5 @@
 # Burp-API-Scripts
-A collection of scripts used to interact with the Burp Rest API
+A collection of scripts used to interact with the Burp Rest API. You must enable the Burp API for these scripts to work. To enable the API, go to User Options -> Misc -> REST API. The default address is 127.0.0.1:1337, and the scripts will default to that address. You can change the location with commandline options. You can choose to require an API key; the scripts will work either way. Just specify the key with the -k option if you are requiring a key.
 
 ## burp_scanwalker.py
 Uses the Burp API to do an active scan on a single host, a file listing hosts, or a range of hosts.
