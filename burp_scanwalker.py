@@ -15,6 +15,7 @@ import re
 import argparse
 import threading
 import socket
+from urllib.parse import urlparse
 if sys.version.startswith('3'):
     import ipaddress
 
@@ -115,7 +116,7 @@ def generate_web_addresses(addrs):
 
 
 def normalize_urls(urls):
-    """Accepts a list of urls and formats them so they will be accepted.
+    """Accepts a list of urls and formats them to the proto://address:port format.
     Returns a new list of the processed urls.
     """
     url_list = []
@@ -127,41 +128,58 @@ def normalize_urls(urls):
     https_port_list = ['832', '981', '1311', '7002', '7021', '7023', '7025',
                    '7777', '8333', '8531', '8888']
     for url in urls:
-        if '*.' in url:
-            url.replace('*.', '')
-        if not url.startswith('http'):
-            if ':' in url:
-                port = url.split(':')[-1]
-                if port in http_port_list:
-                    url_list.append('http://' + url)
-                elif port in https_port_list or port.endswith('43'):
-                    url_list.append('https://' + url)
-                else:
-                    url = url.strip()
-                    url = url.strip('/')
-                    url_list.append('http://' + url + ':80')
-                    url_list.append('https://' + url + ':443')
-                    continue
+        u = urlparse(url)
+        if u.scheme == 'http':
+            if ':' in u.netloc:
+                url_list.append(url)
             else:
-                    url = url.strip()
-                    url = url.strip('/')
-                    url_list.append('http://' + url + ':80')
-                    url_list.append('https://' + url + ':443')
-                    continue
-        if len(url.split(':')) != 3:
-            if url[0:5] != 'https':    
-                url = url.strip()
-                url = url.strip('/')
-                url_list.append(url + ':80')
+                url = u.scheme + '://' + u.netloc + ':80'
+                if u.path:
+                    url += u.path
+                    url_list.append(url)
+                else:
+                    url_list.append(url)
+        elif u.scheme == 'https':
+            if ':' in u.netloc:
+                url_list.append(url)
                 continue
-            elif url[0:5] == 'https':
-                url = url.strip()
-                url = url.strip('/')
-                url_list.append(url + ':443')
-                continue
-        url = url.strip()
-        url = url.strip('/')
-        url_list.append(url)
+            else:
+                url = u.scheme + '://' + u.netloc + ':443'
+                if u.path:
+                    url += u.path
+                    url_list.append(url)
+                else:
+                    url_list.append(url)
+        else:
+            if ':' in u.netloc:
+                port = u.netloc.split(':')[-1]
+                if port in https_port_list:
+                    url = 'http://' + url
+                    url_list.append(url)
+                if port in https_port_list or port.endswith('43'):
+                    url = 'https://' + url
+                    url_list.append(url)
+            while True: 
+                scheme = input('[*] Please specify http or https for the site {}, or type exit to quit: '.format(url)).lower()
+                if scheme == 'exit':
+                    exit()
+                if scheme == 'http' or 'https':
+                    break
+            if scheme == 'http':
+                url = scheme + '://' + url
+                u = urlparse(url)
+                url = u.scheme + '://' + u.netloc + ':80'
+                if u.path:
+                    url += u.path
+                    url_list.append(url)
+            if scheme == 'https':
+                url = scheme + '://' + url
+                u = urlparse(url)
+                url = u.scheme + '://' + u.netloc + ':443'
+                if u.path:
+                    url += u.path
+                    url_list.append(url)
+            continue
     return url_list
 
 
@@ -411,5 +429,4 @@ if __name__ == '__main__':
     # initiates the queue and sets the print lock
     url_queue = queue.Queue()
     print_lock = threading.Lock()
-
     main()
